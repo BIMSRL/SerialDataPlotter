@@ -3,6 +3,10 @@
 **PyQt5**와 **PyQtGraph**를 기반으로 제작된 실시간 시리얼 데이터 모니터링 및 플로팅 프로그램입니다.
 마이크로컨트롤러(Arduino, STM32 등)나 센서로부터 전송되는 시계열 데이터를 실시간으로 그래프로 시각화하고, 로그를 기록하며 CSV 파일로 저장할 수 있습니다.
 
+<p align="center">
+  <img src="Screen Shot.png" alt="Program Screenshot" width="800">
+</p>
+
 ## 📌 주요 기능 (Features)
 
 ### 1. 실시간 데이터 시각화
