@@ -8,7 +8,7 @@
          - 데이터 송신 기능
 
 @author User (JeongWhan Lee)
-@date 2026-01-11
+@date 2026-01-11 
 @version 1.0.0
 """
 
