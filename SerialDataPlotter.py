@@ -41,7 +41,7 @@ class SerialDataPlotter(QMainWindow):
     ## @brief 클래스 생성자입니다. UI를 초기화하고 필요한 변수들을 설정합니다.
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Real-time Serial Data Plotter")
+        self.setWindowTitle("Real-time Serial Data Plotter") 
         self.setGeometry(100, 100, 1200, 800)
 
         # --- Variable Initialization ---
