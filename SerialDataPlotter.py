@@ -121,7 +121,7 @@ class SerialDataPlotter(QMainWindow):
         
         # Baudrate Selection
         self.baud_rate_combo = QComboBox()
-        common_baud_rates = ["9600", "19200", "38400", "57600", "115200"]
+        common_baud_rates = ["9600", "19200", "38400", "57600", "115200", "512000"]
         self.baud_rate_combo.addItems(common_baud_rates)
         self.baud_rate_combo.setCurrentText("115200")
         conn_layout.addWidget(QLabel("Baudrate:"))
@@ -239,12 +239,19 @@ class SerialDataPlotter(QMainWindow):
         self.log_box.setReadOnly(True)
         right_layout.addWidget(self.log_box)
 
-        # --- Serial Send Input ---
+        # --- Serial Send Layout ---
+        send_layout = QHBoxLayout()
         self.send_input = QLineEdit()
         self.send_input.setPlaceholderText("Type a message and press Enter to send")
         self.send_input.returnPressed.connect(self.send_serial_data)
         self.send_input.setEnabled(False) # Initially disabled
-        right_layout.addWidget(self.send_input)
+        send_layout.addWidget(self.send_input)
+
+        self.send_hex_cb = QCheckBox("HEX")
+        self.send_hex_cb.setToolTip("Check to send data as a HEX string")
+        send_layout.addWidget(self.send_hex_cb)
+
+        right_layout.addLayout(send_layout)
 
         splitter.addWidget(right_widget)
 
@@ -379,13 +386,26 @@ class SerialDataPlotter(QMainWindow):
             data_to_send = self.send_input.text()
             if not data_to_send:
                 return # Do not send empty messages
-            
-            # Add newline character, as many devices expect it
-            data_with_newline = data_to_send + '\n'
+
             try:
-                self.serial_port.write(data_with_newline.encode('utf-8'))
-                self.log_box.append(f"Sent: {data_to_send}")
+                if self.send_hex_cb.isChecked():
+                    # HEX 모드
+                    hex_string = data_to_send.replace(" ", "")
+                    if len(hex_string) % 2 != 0:
+                        self.log_message("Error: HEX string must have an even number of digits.")
+                        return
+                    bytes_to_send = bytes.fromhex(hex_string)
+                    self.serial_port.write(bytes_to_send)
+                    self.log_box.append(f"Sent (HEX): {data_to_send}")
+                else:
+                    # ASCII 모드 (기본)
+                    data_with_newline = data_to_send + '\n'
+                    self.serial_port.write(data_with_newline.encode('utf-8'))
+                    self.log_box.append(f"Sent (ASCII): {data_to_send}")
+
                 self.send_input.clear()
+            except ValueError:
+                self.log_message(f"Error: Invalid HEX format. Use characters 0-9 and a-f.")
             except serial.SerialException as e:
                 self.log_message(f"Error sending data: {e}")
         else:
