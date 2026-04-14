@@ -20,7 +20,7 @@ from PyQt5.QtCore import QTimer, QDateTime, Qt
 import serial
 import serial.tools.list_ports
 
-class SerialDataMonitor(QMainWindow):
+class SerialDataMonitor(QMainWindow): 
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Serial Data Monitor")
